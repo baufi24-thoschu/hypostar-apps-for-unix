@@ -86,19 +86,19 @@ WinRM to communicate with the box.
 
 ### Getting Started
 
-``text
+``
 packer build windows_10.json
 ``
 
-``text
+``
 vagrant box add windows-10 windows_10_virtualbox.box
 ``
 
-``text
+``
 vagrant init windows-10
 ``
 
-``text
+``
 vagrant up
 ``
 
