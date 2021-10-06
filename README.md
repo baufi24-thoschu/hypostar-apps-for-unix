@@ -10,13 +10,11 @@ were made to work with Packer and the VMware Fusion / VirtualBox providers for P
 
 [Packer](https://github.com/mitchellh/packer/blob/master/CHANGELOG.md) `0.5.1` or greater is required.
 
-### Windows Editions
-
-All Windows Server versions are defaulted to the Server Standard edition. You can modify this by editing the Autounattend.xml file, changing the `ImageInstall`>`OSImage`>`InstallFrom`>`MetaData`>`Value` element (e.g. to Windows Server 2012 R2 SERVERDATACENTER).
-
 ### Product Keys
 
-The `Autounattend.xml` files are configured to work correctly with trial ISOs (which will be downloaded and cached for you the first time you perform a `packer build`). If you would like to use retail or volume license ISOs, you need to update the `UserData`>`ProductKey` element as follows:
+The `Autounattend.xml` files are configured to work correctly with trial ISOs 
+(which will be downloaded and cached for you the first time you perform a `packer build`).
+If you would like to use retail or volume license ISOs, you need to update the `UserData`>`ProductKey` element as follows:
 
 * Uncomment the `<Key>...</Key>` element
 * Insert your product key into the `Key` element
@@ -25,7 +23,10 @@ If you are going to configure your VM as a KMS client, you can use the product k
 
 ### Windows Updates
 
-The scripts in this repo will install all Windows updates – by default – during Windows Setup. This is a _very_ time consuming process, depending on the age of the OS and the quantity of updates released since the last service pack. You might want to do yourself a favor during development and disable this functionality, by commenting out the `WITH WINDOWS UPDATES` section and uncommenting the `WITHOUT WINDOWS UPDATES` section in `Autounattend.xml`:
+The scripts in this repo will install all Windows updates – by default – during Windows Setup. 
+This is a _very_ time consuming process, depending on the age of the OS and the quantity of updates released since the last service pack. 
+You might want to do yourself a favor during development and disable this functionality, 
+by commenting out the `WITH WINDOWS UPDATES` section and uncommenting the `WITHOUT WINDOWS UPDATES` section in `Autounattend.xml`:
 
 ```xml
 <!-- WITHOUT WINDOWS UPDATES -->
@@ -63,7 +64,9 @@ Doing so will give you hours back in your day, which is a good thing.
 
 ### OpenSSH / WinRM
 
-Currently, [Packer](http://packer.io) has a single communicator that uses SSH. This means we need an SSH server installed on Windows - which is not optimal as we could use WinRM to communicate with the Windows VM. In the short term, everything works well with SSH; in the medium term, work is underway on a WinRM communicator for Packer.
+Currently, [Packer](http://packer.io) has a single communicator that uses SSH. 
+This means we need an SSH server installed on Windows - which is not optimal as we could use WinRM to communicate with the Windows VM. 
+In the short term, everything works well with SSH; in the medium term, work is underway on a WinRM communicator for Packer.
 
 If you have serious objections to OpenSSH being installed, you can always add another stage to your build pipeline:
 
@@ -83,13 +86,21 @@ WinRM to communicate with the box.
 
 ### Getting Started
 
+``text
 packer build windows_10.json
+``
 
+``text
 vagrant box add windows-10 windows_10_virtualbox.box
+``
 
+``text
 vagrant init windows-10
+``
 
+``text
 vagrant up
+``
 
 ### Variables
 
