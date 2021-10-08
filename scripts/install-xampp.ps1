@@ -16,23 +16,36 @@
   The version of XAMPP to install.
 
   .Example
-    # Install 7.2.4
-    Install-Xampp -Version 7.2.4
+    # Install 7.2.4.0
+    Install-Xampp -Version 7.2.4.0
 #>
-Function Install-Xampp {
-  Param(
-    [Parameter(Mandatory)]
-    [string] $version
-  )
+function Install-Xampp {
+    Param(
+        [Parameter(Mandatory)]
+        [string] $version
+    )
 
-  $url = ('https://www.apachefriends.org/xampp-files/{0}/xampp-win32-{0}-0-VC15-installer.exe' -f $version);
+    $major, $minor, $patch, $build = $version.split('.')
+    if (-not $build) {
+        $build = '0'
+    }
 
-  $options = @(
-    '--unattendedmodeui', 'none',
-    '--mode', 'unattended',
-    '--launchapps', '0',
-    '--disable-components', 'xampp_mysql,xampp_filezilla,xampp_mercury,xampp_tomcat,xampp_perl,xampp_phpmyadmin,xampp_webalizer,xampp_sendmail'
-  );
+    if ($major -eq '7') {
+        $toolchain = 'VC15';
+    } else {
+        $toolchain = 'VS16';
+    }
 
-  Install-FromExe -Name 'xampp' -Url $url -Options $options -NoVerify;
+    $url = ('https://www.apachefriends.org/xampp-files/{0}.{1}.{2}/xampp-windows-x64-{0}.{1}.{2}-{3}-{4}-installer.exe' -f ($major, $minor, $patch, $build, $toolchain));
+
+    $options = @(
+        '--unattendedmodeui', 'none',
+        '--mode', 'unattended',
+        '--launchapps', '0',
+        '--disable-components', 'xampp_mysql,xampp_filezilla,xampp_mercury,xampp_tomcat,xampp_perl,xampp_phpmyadmin,xampp_webalizer,xampp_sendmail'
+    );
+
+    Install-FromExe -Name 'xampp' -Url $url -Options $options -NoVerify;
 }
+
+Install-Xampp -Version 8.0.11

@@ -8,6 +8,7 @@
         "./scripts/fixnetwork.ps1",
         "./scripts/microsoft-updates.bat",
         "./scripts/win-updates.ps1",
+        "./scripts/install-xampp.ps1",
         "./scripts/openssh.ps1"
       ],
       "guest_os_type": "windows8srv-64",
@@ -38,6 +39,7 @@
         "./scripts/fixnetwork.ps1",
         "./scripts/microsoft-updates.bat",
         "./scripts/win-updates.ps1",
+        "./scripts/install-xampp.ps1",
         "./scripts/openssh.ps1"
       ],
       "guest_os_type": "Windows10_64",
@@ -72,6 +74,7 @@
         "./scripts/fixnetwork.ps1",
         "./scripts/microsoft-updates.bat",
         "./scripts/win-updates.ps1",
+        "./scripts/install-xampp.ps1",
         "./scripts/openssh.ps1"
       ],
       "guest_os_type": "win-10",
@@ -142,7 +145,7 @@
   ],
   "variables": {
     "autounattend": "./answer_files/10/Autounattend.xml",
-    "cpus": "4",
+    "cpus": "8",
     "disk_size": "61440",
     "headless": "true",
     "iso_checksum": "56ab095075be28a90bc0b510835280975c6bb2ce",
