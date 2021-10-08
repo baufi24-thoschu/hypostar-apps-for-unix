@@ -1,129 +1,100 @@
-# Windows Template for Packer
+# Packer-Windows10 for **hypostar-apps-for-unix**
 
-### Introduction
+A Packer build to make a pretty vanilla Windows 10 x64 box for use with VMWare Desktop or Virtualbox.
 
-This repository contains a Windows 10 template that can be used to create boxes for Vagrant using Packer 
-([Website](http://www.packer.io)) ([Github](http://github.com/mitchellh/packer)) and
-were made to work with Packer and the VMware Fusion / VirtualBox providers for Packer and Vagrant.
+In essence, the build does the following:
 
-### Packer Version
+* Use an existing, vanilla, Windows 10 x64 Enterprise trial ISO
+* Enable WinRM (in a slightly scary, Unauthenticated mode, for Packer/Vagrant to use)
+* Create a `vagrant` user (as is the style)
+* Grab all the Windows updates is can
+* Install VM guest additions
+* Turn off Hibernation
+* Turn on RDP
+* Set the network type for the virtual adapter to 'Home' and not bug you about it
+* Turns autologin *off* because I like simulating end user environments, ok?
 
-[Packer](https://github.com/mitchellh/packer/blob/master/CHANGELOG.md) `0.5.1` or greater is required.
+## Requirements
 
-### Product Keys
+* **A copy of the [Windows 10 x64 Enterprise Trial](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise)**
+* **Packer / Vagrant** - Tested with Packer 1.7.6 and Vagrant 2.2.18.
+* **VMWare Workstation or Fusion with The [Vagrant VMWare Provider](http://www.vagrantup.com/vmware)**, **[Virtualbox](https://www.virtualbox.org/)**, **Parallels** or HyperV (support for HyperV and Parallels added by gildas)
+* **An RDP client** (built in on Windows, available [here](https://itunes.apple.com/us/app/microsoft-remote-desktop-10/id1295203466?mt=12) for Mac
+* **[Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)**
 
-The `Autounattend.xml` files are configured to work correctly with trial ISOs 
-(which will be downloaded and cached for you the first time you perform a `packer build`).
-If you would like to use retail or volume license ISOs, you need to update the `UserData`>`ProductKey` element as follows:
+This project works great with Virtualbox, so don't bother shelling out for VMWare Fusion without trying VirtualBox first.
 
-* Uncomment the `<Key>...</Key>` element
-* Insert your product key into the `Key` element
+## Usage
 
-If you are going to configure your VM as a KMS client, you can use the product keys at http://technet.microsoft.com/en-us/library/jj612867.aspx. These are the default values used in the `Key` element.
+This guide will assume you zero knowledge of any or all of these systems.
 
-### Windows Updates
+1. Install [Vagrant](https://www.vagrantup.com/).
+2. Install [Packer](https://packer.io/) - these [instructions](https://www.packer.io/intro/getting-started/setup.html) help.
+3. Download and install [Virtualbox](https://www.virtualbox.org/) or [VMWare Fusion](http://www.vmware.com/products/fusion)/Workstation (with the [Vagrant Plugin](https://www.vagrantup.com/vmware)).
+4. Ensure you have an RDP client (you do if you're running Windows) - for Mac, install [this](https://www.microsoft.com/en-us/download/details.aspx?id=18140)
+5. Download the [Windows 10 x64 Enterprise Trial](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise), save the ISO someplace you'll remember.
+6. Make a working directory somewhere (OSX suggestion `mkdir ~/Packer_Projects/`) and `cd` to that directory (e.g. `cd ~/Packer_Projects/`).
+7. Clone this repo to your working directory: `git clone https://github.com/luciusbono/Packer-Windows10` (if you don't have `git` installed: [here are instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+8. Determine the **MD5 hash** of your iso: `md5 [path to iso]` in OSX `FCIV -md5 [path to iso]` in Windows (download it [here](https://support.microsoft.com/en-us/kb/841290#bookmark-4)) -- Linux people are smarter than me and likely can just calculate the md5 hash through ether-magic. Windows: ``CertUtil -hashfile windows.iso MD5`` | Linux: ``md5sum windows.iso`` | MacOS: ``md5sum windows.iso``
+9. To actually build your VM, build against the hypervisor target you're interested in:
+* For **Virtualbox** run `packer build -only=virtualbox-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json`
+* For **VMWare Fusion/Workstation** run `packer build -only=vmware-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json`.
+* For **Parallels** run `packer build -only=parallels-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json`
+* for **HyperV** run `packer build -only=hyperv-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json` optionally, if you want to specify a different HyperV virtual switch other than "Default Switch" you can specify it in the `switch_name` var.
+10. You will see build pause on `Waiting for WinRM to become available` - this is normal! If you actually access the console session on your VM you will see that it is getting updates from Microsoft's servers. This can easily take 30 minutes, so be patient. After the updates are all installed, Windows will turn it's WinRM service back on and Packer will continue with the build.
+11. Run `vagrant box add --name [vagrant box name] [name of .box file]`. The name can be anything you want. For example, this command is valid for Virtualbox: `vagrant box add --name windows10 virtualbox-iso_windows-10.box`
+12. Make a working directory for your Vagrant VM (OSX suggestion `mkdir ~/Vagrant_Projects/windows10`) and `cd` to that directory (e.g. `cd ~/Vagrant_Projects/windows10`)
+13. Type `vagrant init [vagrant box name]` - for example `vagrant init windows10`
+14. Type `vagrant up` and once the box has been launched type `vagrant rdp`
+15. Continue through any certificate errors and login with the username: `vagrant` and the password: `vagrant`
+16. Feel free to delete the `.box` file that packer created. You may also delete your `.iso` you downloaded if you wish.
+17. Stop the box by typing `vagrant halt`. Destroy the box by typing `vagrant destroy`
 
-The scripts in this repo will install all Windows updates – by default – during Windows Setup. 
-This is a _very_ time consuming process, depending on the age of the OS and the quantity of updates released since the last service pack. 
-You might want to do yourself a favor during development and disable this functionality, 
-by commenting out the `WITH WINDOWS UPDATES` section and uncommenting the `WITHOUT WINDOWS UPDATES` section in `Autounattend.xml`:
+### Usage Explanation
 
-```xml
-<!-- WITHOUT WINDOWS UPDATES -->
-<SynchronousCommand wcm:action="add">
-    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\openssh.ps1 -AutoStart</CommandLine>
-    <Description>Install OpenSSH</Description>
-    <Order>99</Order>
-    <RequiresUserInput>true</RequiresUserInput>
-</SynchronousCommand>
-<!-- END WITHOUT WINDOWS UPDATES -->
-<!-- WITH WINDOWS UPDATES -->
-<!--
-<SynchronousCommand wcm:action="add">
-    <CommandLine>cmd.exe /c a:\microsoft-updates.bat</CommandLine>
-    <Order>98</Order>
-    <Description>Enable Microsoft Updates</Description>
-</SynchronousCommand>
-<SynchronousCommand wcm:action="add">
-    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\openssh.ps1</CommandLine>
-    <Description>Install OpenSSH</Description>
-    <Order>99</Order>
-    <RequiresUserInput>true</RequiresUserInput>
-</SynchronousCommand>
-<SynchronousCommand wcm:action="add">
-    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\win-updates.ps1</CommandLine>
-    <Description>Install Windows Updates</Description>
-    <Order>100</Order>
-    <RequiresUserInput>true</RequiresUserInput>
-</SynchronousCommand>
--->
-<!-- END WITH WINDOWS UPDATES -->
+The `packer.json` file requires two variables to validate. You can confirm these with a `packer inspect packer.json`
+
+```
+$ packer inspect packer.json 
+  iso_md5     =
+  iso_path    =
+  switch_name = Default Switch
+
+Builders:
+
+  hyperv-iso
+  parallels-iso
+  virtualbox-iso
+  vmware-iso
+
+Provisioners:
+
+  powershell
+  windows-restart
 ```
 
-Doing so will give you hours back in your day, which is a good thing.
+Since there are two Builders, you also likely want to specify one or the other.
 
-### OpenSSH / WinRM
+Valid options are `virtualbox-iso` or `vmware-iso`.
 
-Currently, [Packer](http://packer.io) has a single communicator that uses SSH. 
-This means we need an SSH server installed on Windows - which is not optimal as we could use WinRM to communicate with the Windows VM. 
-In the short term, everything works well with SSH; in the medium term, work is underway on a WinRM communicator for Packer.
+The other two variables, `iso_md5` and `iso_path`, are the path and the MD5 hash of the Windows 10 Enterprise trial ISO.
 
-If you have serious objections to OpenSSH being installed, you can always add another stage to your build pipeline:
+## Other things to note
 
-* Build a base box using Packer
-* Create a Vagrantfile, use the base box from Packer, connect to the VM via WinRM (using the [vagrant-windows](https://github.com/WinRb/vagrant-windows) plugin) and disable the 'sshd' service or uninstall OpenSSH completely
-* Perform a Vagrant run and output a .box file
+### Update script
+The update grabbing script is a bit of a grey-box, as I basically just hijacked it (as well as lots of other code) from [this awesome project](https://github.com/joefitzgerald/packer-windows) - which I think is the defacto standard for Windows / Packer relations - but I wanted a leaner build. This project started as a frankenstein build, but is turning more into a ground-up rewrite of a lot of other projects' scripts and code. With the exception of the `update-windows.ps1` script, which I only modified very slightly, I will slowly go through all the code in this project and make sure I kill all the cruft.
 
-It's worth mentioning that many Chef cookbooks will not work properly through Cygwin's SSH environment on Windows. Specifically, packages that need access to environment-specific configurations such as the `PATH` variable, will fail. This includes packages that use the Windows installer, `msiexec.exe`.
+### If you have multiple hypervisors installed
+If, for some reason, you have multiple hypervisors, but want to run this project in Virtualbox, for example, you need to specify the provider in your `vagrant up` statement like so: `vagrant up --provider=virtualbox`
 
-It's currently recommended that you add a second step to your pipeline and use Vagrant to install your packages through Chef.
+Almost nobody will fall into the camp, but it's worth mentioning. Have fun!
 
-### Using .box Files With Vagrant
+### Sym links are off by default for synced folders
+The vagrantfile template disables the `SharedFoldersEnableSymlinksCreate` option. I'd rather default to an untrusted guest since most of my workflows do not require symlinks. To change this, just add `config.vm.synced_folder ".", "/vagrant", SharedFoldersEnableSymlinksCreate: true` to your vagrantfile and do a `vagrant reload`.
 
-The generated box files include a Vagrantfile template that is suitable for
-use with Vagrant 1.6.2+, which includes native support for Windows and uses
-WinRM to communicate with the box.
+## Troubleshooting
 
-### Getting Started
+### vagrant rdp prompts for login credentials but vagrant/vagrant does not work
+I ran into this issue on a Windows 10 host with this project. I [submitted an issue](https://github.com/mitchellh/vagrant/issues/6358). The resolution is to choose `Use another account` and login with `.\vagrant` as the login and `vagrant` as the password. Unforuntately, it appears that one must log in with these credentials in this manner each time you `vagrant rdp` (unless that issue says otherwise...).
 
-``
-packer build windows_10.json
-``
-
-[comment]: <> (``)
-
-[comment]: <> (vagrant box add windows_10_{{.Provider}}.box --name=windows_10)
-
-[comment]: <> (``)
-
-[comment]: <> (``)
-
-[comment]: <> (vagrant init windows_10)
-
-[comment]: <> (``)
-
-[comment]: <> (``)
-
-[comment]: <> (vagrant up)
-
-[comment]: <> (``)
-
-### Variables
-
-The Packer templates support the following variables:
-
-| Name                | Description                                                      |
-| --------------------|------------------------------------------------------------------|
-| `iso_url`           | Path or URL to ISO file                                          |
-| `iso_checksum`      | Checksum (see also `iso_checksum_type`) of the ISO file          |
-| `iso_checksum_type` | The checksum algorithm to use (out of those supported by Packer) |
-| `autounattend`      | Path to the Autounattend.xml file                                |
-
-
-### Acknowledgements
-
-https://www.virtualbox.org/
-
-https://www.vagrantup.com/
-
-https://www.packer.io/
+`vagrant rdp -- /public` will also force mstsc into "public mode" which will clear the credentials dialogs each time. 
