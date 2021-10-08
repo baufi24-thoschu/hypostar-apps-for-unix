@@ -46,7 +46,8 @@
                 -->
 
                 <!-- Product Key from http://technet.microsoft.com/en-us/library/jj612867.aspx -->
-                <ProductKey>NPPR9-FWDCX-D2C8J-H872K-2YT43
+                <ProductKey>
+                    <Key>33PXH-7Y6KF-2VJC9-XBBR8-HVTHH</Key>
                     <WillShowUI>Never</WillShowUI>
                 </ProductKey>
             </UserData>
@@ -278,6 +279,12 @@
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
                 <!-- END WITH WINDOWS UPDATES -->
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\install-xampp.ps1</CommandLine>
+                    <Description>Install XAMPP</Description>
+                    <Order>102</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
             </FirstLogonCommands>
             <ShowWindowsLive>false</ShowWindowsLive>
         </component>
