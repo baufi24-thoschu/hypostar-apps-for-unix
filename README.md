@@ -90,17 +90,23 @@ WinRM to communicate with the box.
 packer build windows_10.json
 ``
 
-``
-vagrant box add windows-10 windows_10_virtualbox.box
-``
+[comment]: <> (``)
 
-``
-vagrant init windows-10
-``
+[comment]: <> (vagrant box add windows-10 windows_10_{{.Provider}}.box)
 
-``
-vagrant up
-``
+[comment]: <> (``)
+
+[comment]: <> (``)
+
+[comment]: <> (vagrant init windows-10)
+
+[comment]: <> (``)
+
+[comment]: <> (``)
+
+[comment]: <> (vagrant up)
+
+[comment]: <> (``)
 
 ### Variables
 
