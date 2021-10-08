@@ -92,13 +92,13 @@ packer build windows_10.json
 
 [comment]: <> (``)
 
-[comment]: <> (vagrant box add windows-10 windows_10_{{.Provider}}.box)
+[comment]: <> (vagrant box add windows_10_{{.Provider}}.box --name=windows_10)
 
 [comment]: <> (``)
 
 [comment]: <> (``)
 
-[comment]: <> (vagrant init windows-10)
+[comment]: <> (vagrant init windows_10)
 
 [comment]: <> (``)
 
