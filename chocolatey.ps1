@@ -20,3 +20,5 @@ if($userPath) {
 
 # Run the installer
 iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+
+exit 0

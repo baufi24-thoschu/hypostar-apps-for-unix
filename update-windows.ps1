@@ -30,17 +30,17 @@ function Check-ContinueRestartOrEnd() {
                 Install-WindowsUpdates
             } elseif ($script:Cycles -gt $global:MaxCycles) {
                 LogWrite "Exceeded Cycle Count - Stopping"
-                Invoke-Expression "a:\openssh.ps1 -AutoStart"
+                Invoke-Expression "a:\configure-winrm.ps1"
             } else {
                 LogWrite "Done Installing Windows Updates"
-                Invoke-Expression "a:\openssh.ps1 -AutoStart"
+                Invoke-Expression "a:\configure-winrm.ps1"
             }
         }
         1 {
             $prop = (Get-ItemProperty $RegistryKey).$RegistryEntry
             if (-not $prop) {
                 LogWrite "Restart Registry Entry Does Not Exist - Creating It"
-                Set-ItemProperty -Path $RegistryKey -Name $RegistryEntry -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File $($script:ScriptPath) -MaxUpdatesPerCycle $($MaxUpdatesPerCycle)"
+                Set-ItemProperty -Path $RegistryKey -Name $RegistryEntry -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoLogo -ExecutionPolicy Bypass -File $($script:ScriptPath) -MaxUpdatesPerCycle $($MaxUpdatesPerCycle)"
             } else {
                 LogWrite "Restart Registry Entry Exists Already"
             }
@@ -60,9 +60,9 @@ function Install-WindowsUpdates() {
     LogWrite "Evaluating Available Updates with limit of $($MaxUpdatesPerCycle):"
     $UpdatesToDownload = New-Object -ComObject 'Microsoft.Update.UpdateColl'
     $script:i = 0;
-    $CurrentUpdates = $SearchResult.Updates
+    $CurrentUpdates = $SearchResult.Updates | Select-Object
     while($script:i -lt $CurrentUpdates.Count -and $script:CycleUpdateCount -lt $MaxUpdatesPerCycle) {
-        $Update = $CurrentUpdates.Item($script:i)
+        $Update = $CurrentUpdates[$script:i]
         if (($Update -ne $null) -and (!$Update.IsDownloaded)) {
             [bool]$addThisUpdate = $false
             if ($Update.InstallationBehavior.CanRequestUserInput) {
@@ -125,7 +125,7 @@ function Install-WindowsUpdates() {
         LogWrite 'No updates available to install...'
         $global:MoreUpdates=0
         $global:RestartRequired=0
-        Invoke-Expression "a:\openssh.ps1 -AutoStart"
+        Invoke-Expression "a:\configure-winrm.ps1"
         break
     }
 
@@ -154,8 +154,8 @@ function Install-WindowsUpdates() {
             Title = $UpdatesToInstall.Item($i).Title
             Result = $InstallationResult.GetUpdateResult($i).ResultCode
         }
-        LogWrite "Item: $($UpdatesToInstall.Item($i).Title)"
-        LogWrite "Result: $($InstallationResult.GetUpdateResult($i).ResultCode)"
+        LogWrite "Item: " $UpdatesToInstall.Item($i).Title
+        LogWrite "Result: " $InstallationResult.GetUpdateResult($i).ResultCode;
     }
 
     Check-ContinueRestartOrEnd
@@ -230,4 +230,3 @@ if ($global:MoreUpdates -eq 1) {
 } else {
     Check-ContinueRestartOrEnd
 }
-

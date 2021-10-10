@@ -19,7 +19,7 @@
     # Install 7.2.4.0
     Install-Xampp -Version 7.2.4.0
 #>
-function Install-Xampp {
+Function Install-Xampp {
     Param(
         [Parameter(Mandatory)]
         [string] $version
@@ -47,5 +47,3 @@ function Install-Xampp {
 
     Install-FromExe -Name 'xampp' -Url $url -Options $options -NoVerify;
 }
-
-Install-Xampp -Version 8.0.11

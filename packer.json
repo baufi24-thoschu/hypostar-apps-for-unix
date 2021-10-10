@@ -1,0 +1,204 @@
+{
+  "builders": [
+    {
+      "communicator": "winrm",
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "Autounattend.xml",
+        "update-windows.ps1",
+        "chocolatey.ps1",
+        "configure-winrm.ps1"
+      ],
+      "generation": "1",
+      "headless": true,
+      "iso_checksum": "md5:{{user `iso_md5`}}",
+      "iso_url": "{{user `iso_path`}}",
+      "shutdown_command": "{{user `shutdown_command`}}",
+      "skip_compaction": false,
+      "switch_name": "{{user `switch_name`}}",
+      "type": "hyperv-iso",
+      "winrm_password": "vagrant",
+      "winrm_timeout": "6h",
+      "winrm_username": "vagrant",
+      "winrm_port": "443"
+
+    }, {
+      "communicator": "winrm",
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "Autounattend.xml",
+        "update-windows.ps1",
+        "chocolatey.ps1",
+        "configure-winrm.ps1"
+      ],
+      "guest_os_type": "win-10",
+      "iso_checksum": "md5:{{user `iso_md5`}}",
+      "iso_url": "{{user `iso_path`}}",
+      "parallels_tools_flavor": "win",
+      "parallels_tools_guest_path": "c:/Windows/Temp/windows.iso",
+      "parallels_tools_mode": "upload",
+      "prlctl": [
+        [
+          "set",
+          "{{.Name}}",
+          "--startup-view",
+          "window"
+        ], [
+          "set",
+          "{{.Name}}",
+          "--memsize",
+          "{{user `memory_size`}}"
+        ], [
+          "set",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpus`}}"
+        ], [
+          "set",
+          "{{.Name}}",
+          "--smart-mount",
+          "off"
+        ], [
+          "set",
+          "{{.Name}}",
+          "--efi-boot",
+          "off"
+        ], [
+          "set",
+          "{{.Name}}",
+          "--shared-profile",
+          "off"
+        ], [
+          "set",
+          "{{.Name}}",
+          "--shared-cloud",
+          "off"
+        ], [
+          "set",
+          "{{.Name}}",
+          "--sh-app-guest-to-host",
+          "off"
+        ], [
+          "set",
+          "{{.Name}}",
+          "--sh-app-host-to-guest",
+          "off"
+        ]
+      ],
+      "shutdown_command": "{{user `shutdown_command`}}",
+      "skip_compaction": false,
+      "type": "parallels-iso",
+      "winrm_password": "vagrant",
+      "winrm_timeout": "6h",
+      "winrm_username": "vagrant",
+      "winrm_port": "443"
+    }, {
+      "communicator": "winrm",
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "Autounattend.xml",
+        "update-windows.ps1",
+        "chocolatey.ps1",
+        "configure-winrm.ps1"
+      ],
+      "guest_os_type": "windows10-64",
+      "headless": true,
+      "iso_checksum": "md5:{{user `iso_md5`}}",
+      "iso_url": "{{user `iso_path`}}",
+      "skip_compaction": false,
+      "tools_upload_flavor": "windows",
+      "tools_upload_path": "c:/Windows/Temp/windows.iso",
+      "type": "vmware-iso",
+      "vmx_data": {
+        "gui.fitguestusingnativedisplayresolution": "FALSE",
+        "memsize": "{{user `memory_size`}}",
+        "numvcpus": "{{user `cpus`}}",
+        "scsi0.virtualDev": "lsisas1068",
+        "virtualHW.version": "10"
+      },
+      "winrm_password": "vagrant",
+      "winrm_timeout": "6h",
+      "winrm_username": "vagrant",
+      "winrm_port": "443"
+    }, {
+      "communicator": "winrm",
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "Autounattend.xml",
+        "update-windows.ps1",
+        "chocolatey.ps1",
+        "configure-winrm.ps1"
+      ],
+      "guest_additions_mode": "upload",
+      "guest_additions_path": "c:/Windows/Temp/windows.iso",
+      "guest_os_type": "Windows10_64",
+      "hard_drive_interface": "sata",
+      "headless": true,
+      "iso_checksum": "md5:{{user `iso_md5`}}",
+      "iso_interface": "sata",
+      "iso_url": "{{user `iso_path`}}",
+      "shutdown_command": "{{user `shutdown_command`}}",
+      "type": "virtualbox-iso",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ], [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpus`}}"
+        ], [
+          "modifyvm",
+          "{{.Name}}",
+          "--vram",
+          "32"
+        ]
+      ],
+      "winrm_password": "vagrant",
+      "winrm_timeout": "6h",
+      "winrm_username": "vagrant",
+      "winrm_port": "443"
+    }
+  ],
+  "post-processors": [
+    {
+      "keep_input_artifact": true,
+      "output": "{{.Provider}}_windows-10.box",
+      "type": "vagrant",
+      "vagrantfile_template": "vagrantfile.template"
+    }
+  ],
+  "provisioners": [
+    {
+      "scripts": [
+        "install-guest-tools.ps1",
+        "enable-rdp.ps1",
+        "disable-hibernate.ps1",
+        "disable-autologin.ps1",
+        "enable-uac.ps1",
+        "no-expiration.ps1",
+        "chocolatey.ps1"
+      ],
+      "type": "powershell"
+    }, {
+      "restart_check_command": "powershell -command \"\u0026 {if ((get-content C:\\ProgramData\\lastboot.txt) -eq (Get-WmiObject win32_operatingsystem).LastBootUpTime) {Write-Output 'Sleeping for 600 seconds to wait for reboot'; start-sleep 600} else {Write-Output 'Reboot complete'}}\"",
+      "restart_command": "powershell \"\u0026 {(Get-WmiObject win32_operatingsystem).LastBootUpTime > C:\\ProgramData\\lastboot.txt; Restart-Computer -force}\"",
+      "type": "windows-restart"
+    }
+  ],
+  "variables": {
+    "iso_md5": "",
+    "iso_path": "",
+    "switch_name": "Default Switch",
+    "cpus": "8",
+    "iso_checksum": "56ab095075be28a90bc0b510835280975c6bb2ce",
+    "iso_checksum_type": "sha1",
+    "iso_url": "http://download.microsoft.com/download/C/3/9/C399EEA8-135D-4207-92C9-6AAB3259F6EF/10240.16384.150709-1700.TH1_CLIENTENTERPRISEEVAL_OEMRET_X64FRE_EN-US.ISO",
+    "memory_size": "8192",
+    "disk_size": "61440",
+    "shutdown_command": "shutdown /s /t 5 /f /d p:4:1 /c \"Packer Shutdown\""
+  }
+}

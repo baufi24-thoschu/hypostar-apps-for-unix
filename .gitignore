@@ -58,3 +58,8 @@ build-iPhoneSimulator/
 .idea
 packer_cache
 output-virtualbox-iso
+
+*.iso
+*.box
+packerbuild.log
+windowsbuild.zip
