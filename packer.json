@@ -6,7 +6,6 @@
       "floppy_files": [
         "Autounattend.xml",
         "update-windows.ps1",
-        "chocolatey.ps1",
         "configure-winrm.ps1"
       ],
       "generation": "1",
@@ -28,7 +27,6 @@
       "floppy_files": [
         "Autounattend.xml",
         "update-windows.ps1",
-        "chocolatey.ps1",
         "configure-winrm.ps1"
       ],
       "guest_os_type": "win-10",
@@ -98,7 +96,6 @@
       "floppy_files": [
         "Autounattend.xml",
         "update-windows.ps1",
-        "chocolatey.ps1",
         "configure-winrm.ps1"
       ],
       "guest_os_type": "windows10-64",
@@ -126,7 +123,6 @@
       "floppy_files": [
         "Autounattend.xml",
         "update-windows.ps1",
-        "chocolatey.ps1",
         "configure-winrm.ps1"
       ],
       "guest_additions_mode": "upload",
