@@ -15,7 +15,7 @@ winrm s "winrm/config/service/auth" '@{Basic="true"}'
 # Enable the WinRM Firewall rule, which will likely already be enabled due to the 'winrm quickconfig' command above
 Enable-NetFirewallRule -DisplayName "Windows Remote Management (HTTP-In)"
 
-sc.exe config winrm start=auto
+sc.exe config winrm start= auto
 
 exit 0
 

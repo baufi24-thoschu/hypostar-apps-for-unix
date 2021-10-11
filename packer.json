@@ -16,7 +16,6 @@
       "skip_compaction": false,
       "switch_name": "{{user `switch_name`}}",
       "type": "hyperv-iso",
-      "winrm_password": "vagrant",
       "winrm_timeout": "6h",
       "winrm_username": "vagrant",
       "winrm_port": "443"
@@ -86,7 +85,6 @@
       "shutdown_command": "{{user `shutdown_command`}}",
       "skip_compaction": false,
       "type": "parallels-iso",
-      "winrm_password": "vagrant",
       "winrm_timeout": "6h",
       "winrm_username": "vagrant",
       "winrm_port": "443"
@@ -113,7 +111,6 @@
         "scsi0.virtualDev": "lsisas1068",
         "virtualHW.version": "10"
       },
-      "winrm_password": "vagrant",
       "winrm_timeout": "6h",
       "winrm_username": "vagrant",
       "winrm_port": "443"
@@ -153,7 +150,6 @@
           "32"
         ]
       ],
-      "winrm_password": "vagrant",
       "winrm_timeout": "6h",
       "winrm_username": "vagrant",
       "winrm_port": "443"
