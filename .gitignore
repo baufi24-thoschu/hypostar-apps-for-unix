@@ -63,3 +63,5 @@ output-virtualbox-iso
 *.box
 packerbuild.log
 windowsbuild.zip
+
+packer
