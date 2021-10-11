@@ -171,8 +171,7 @@
         "disable-hibernate.ps1",
         "disable-autologin.ps1",
         "enable-uac.ps1",
-        "no-expiration.ps1",
-        "chocolatey.ps1"
+        "no-expiration.ps1"
       ],
       "type": "powershell"
     }, {
