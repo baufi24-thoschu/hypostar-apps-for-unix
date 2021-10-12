@@ -36,7 +36,7 @@ This guide will assume you zero knowledge of any or all of these systems.
 4. Ensure you have an RDP client (you do if you're running Windows) - for Mac, install [this](https://www.microsoft.com/en-us/download/details.aspx?id=18140)
 5. Download the [Windows 10 x64 Enterprise Trial](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise), save the ISO someplace you'll remember.
 6. Make a working directory somewhere (OSX suggestion `mkdir ~/Packer_Projects/`) and `cd` to that directory (e.g. `cd ~/Packer_Projects/`).
-7. Clone this repo to your working directory: `git clone https://github.com/luciusbono/Packer-Windows10` (if you don't have `git` installed: [here are instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+7. Clone this repo to your working directory: `git clone https://github.com/baufi24-thoschu/hypostar-apps-for-unix` (if you don't have `git` installed: [here are instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 8. Determine the **MD5 hash** of your iso: `md5 [path to iso]` in OSX `FCIV -md5 [path to iso]` in Windows (download it [here](https://support.microsoft.com/en-us/kb/841290#bookmark-4)) -- Linux people are smarter than me and likely can just calculate the md5 hash through ether-magic. Windows: ``CertUtil -hashfile windows.iso MD5`` | Linux: ``md5sum windows.iso`` | MacOS: ``md5sum windows.iso``
 9. To actually build your VM, build against the hypervisor target you're interested in:
 * For **Virtualbox** run `packer build -only=virtualbox-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json` 
