@@ -156,7 +156,7 @@
       "winrm_password": "vagrant",
       "winrm_timeout": "3h",
       "winrm_username": "vagrant",
-      "winrm_port": "5985"
+      "winrm_port": "443"
     }
   ],
   "post-processors": [
