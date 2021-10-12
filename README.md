@@ -104,7 +104,7 @@ it appears that one must log in with these credentials in this manner each time 
 `vagrant rdp -- /public` will also force mstsc into "public mode" which will clear the credentials dialogs each time. 
 
 ## Vagrant Box
-[hypostar-apps-for-unix](https://app.vagrantup.com/thoschu/boxes/hypostar-apps-for-unix)
+[thoschu/hypostar-apps-for-unix](https://app.vagrantup.com/thoschu/boxes/hypostar-apps-for-unix)
 
 ``vagrant init thoschu/hypostar-apps-for-unix``
 
