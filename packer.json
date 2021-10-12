@@ -1,11 +1,13 @@
 {
   "builders": [
     {
+      "vm_name": "windows10vm{{.Name}}",
       "communicator": "winrm",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
         "Autounattend.xml",
         "update-windows.ps1",
+        "xampp.ps1",
         "configure-winrm.ps1"
       ],
       "generation": "1",
@@ -16,17 +18,17 @@
       "skip_compaction": false,
       "switch_name": "{{user `switch_name`}}",
       "type": "hyperv-iso",
-      "winrm_password": "vagrant",
-      "winrm_timeout": "3h",
+      "winrm_timeout": "6h",
       "winrm_username": "vagrant",
-      "winrm_port": "443"
-
+      "winrm_insecure": true
     }, {
+      "vm_name": "windows10vm{{.Name}}",
       "communicator": "winrm",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
         "Autounattend.xml",
         "update-windows.ps1",
+        "xampp.ps1",
         "configure-winrm.ps1"
       ],
       "guest_os_type": "win-10",
@@ -86,16 +88,17 @@
       "shutdown_command": "{{user `shutdown_command`}}",
       "skip_compaction": false,
       "type": "parallels-iso",
-      "winrm_password": "vagrant",
-      "winrm_timeout": "3h",
+      "winrm_timeout": "6h",
       "winrm_username": "vagrant",
-      "winrm_port": "443"
+      "winrm_insecure": true
     }, {
+      "vm_name": "windows10vm{{.Name}}",
       "communicator": "winrm",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
         "Autounattend.xml",
         "update-windows.ps1",
+        "xampp.ps1",
         "configure-winrm.ps1"
       ],
       "guest_os_type": "windows10-64",
@@ -113,19 +116,20 @@
         "scsi0.virtualDev": "lsisas1068",
         "virtualHW.version": "10"
       },
-      "winrm_password": "vagrant",
-      "winrm_timeout": "3h",
+      "winrm_timeout": "6h",
       "winrm_username": "vagrant",
-      "winrm_port": "443"
+      "winrm_insecure": true
     }, {
+      "vm_name": "windows10vm{{.Name}}",
       "communicator": "winrm",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
         "Autounattend.xml",
         "update-windows.ps1",
+        "xampp.ps1",
         "configure-winrm.ps1"
       ],
-      "guest_additions_mode": "upload",
+      "guest_additions_mode": "attach",
       "guest_additions_path": "c:/Windows/Temp/windows.iso",
       "guest_os_type": "Windows10_64",
       "hard_drive_interface": "sata",
@@ -153,15 +157,14 @@
           "32"
         ]
       ],
-      "winrm_password": "vagrant",
-      "winrm_timeout": "3h",
+      "winrm_timeout": "6h",
       "winrm_username": "vagrant",
-      "winrm_port": "443"
+      "winrm_insecure": true
     }
   ],
   "post-processors": [
     {
-      "keep_input_artifact": true,
+      "keep_input_artifact": false,
       "output": "{{.Provider}}_windows-10.box",
       "type": "vagrant",
       "vagrantfile_template": "vagrantfile.template"
