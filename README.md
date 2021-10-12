@@ -1,5 +1,7 @@
 # Packer-Windows10 for hypostar-apps-for-unix
 
+![Windows 10](https://www.lizensio.de/blog/wp-content/uploads/2019/04/Windows-10.jpg "Beispielbild Windows 10")
+
 A Packer build to make a pretty vanilla Windows 10 x64 box for use with VMWare Desktop or Virtualbox.
 
 In essence, the build does the following:
