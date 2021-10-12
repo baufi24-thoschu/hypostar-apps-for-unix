@@ -102,3 +102,6 @@ The resolution is to choose `Use another account` and login with `.\vagrant` as 
 it appears that one must log in with these credentials in this manner each time you `vagrant rdp` (unless that issue says otherwise...). 
 
 `vagrant rdp -- /public` will also force mstsc into "public mode" which will clear the credentials dialogs each time. 
+
+## Vagrant Box
+My favorite search engine is [Duck Duck Go](https://duckduckgo.com).
