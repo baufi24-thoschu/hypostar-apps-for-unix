@@ -39,11 +39,11 @@ This guide will assume you zero knowledge of any or all of these systems.
 7. Clone this repo to your working directory: `git clone https://github.com/baufi24-thoschu/hypostar-apps-for-unix` (if you don't have `git` installed: [here are instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 8. Determine the **MD5 hash** of your iso: `md5 [path to iso]` in OSX `FCIV -md5 [path to iso]` in Windows (download it [here](https://support.microsoft.com/en-us/kb/841290#bookmark-4)) -- Linux people are smarter than me and likely can just calculate the md5 hash through ether-magic. Windows: ``CertUtil -hashfile windows.iso MD5`` | Linux: ``md5sum windows.iso`` | MacOS: ``md5sum windows.iso``
 9. To actually build your VM, build against the hypervisor target you're interested in:
-* For **Virtualbox** run `packer build -debug -only=virtualbox-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json` 
-* For **VMWare Fusion/Workstation** run `packer build -debug -only=vmware-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json`. 
-* For **Parallels** run `packer build -debug -only=parallels-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json`
-* for **HyperV** run `packer build -debug -only=hyperv-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json` optionally, if you want to specify a different HyperV virtual switch other than "Default Switch" you can specify it in the `switch_name` var. 
-10. You will see build pause on `Waiting for WinRM to become available` - this is normal! If you actually access the console session on your VM you will see that it is getting updates from Microsoft's servers. This can easily take 30 minutes, so be patient. After the updates are all installed, Windows will turn it's WinRM service back on and Packer will continue with the build. 
+* For **Virtualbox** run `packer build [-debug] -only=virtualbox-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json` 
+* For **VMWare Fusion/Workstation** run `packer build [-debug] -only=vmware-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json`. 
+* For **Parallels** run `packer build [-debug] -only=parallels-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json`
+* for **HyperV** run `packer build [-debug] -only=hyperv-iso -var 'iso_path=[path to iso]' -var 'iso_md5=[md5 of iso]' packer.json` optionally, if you want to specify a different HyperV virtual switch other than "Default Switch" you can specify it in the `switch_name` var. 
+10. You will see build pause on `Waiting for WinRM to become available` - this is normal! If you actually access the console session on your VM you will see that it is getting updates from Microsoft's servers. This can easily take 30/45/60 minutes, so be patient. After the updates are all installed, Windows will turn it's WinRM service back on and Packer will continue with the build. 
 11. Run `vagrant box add --name [vagrant box name] [name of .box file]`. The name can be anything you want. For example, this command is valid for Virtualbox: `vagrant box add --name windows10 virtualbox-iso_windows-10.box`
 12. Make a working directory for your Vagrant VM (OSX suggestion `mkdir ~/Vagrant_Projects/windows10`) and `cd` to that directory (e.g. `cd ~/Vagrant_Projects/windows10`)
 13. Type `vagrant init [vagrant box name]` - for example `vagrant init windows10`
@@ -98,7 +98,7 @@ The vagrantfile template disables the `SharedFoldersEnableSymlinksCreate` option
 
 ### vagrant rdp prompts for login credentials but vagrant/vagrant does not work
 I ran into this issue on a Windows 10 host with this project. I [submitted an issue](https://github.com/mitchellh/vagrant/issues/6358). 
-The resolution is to choose `Use another account` and login with `.\vagrant` as the login and `vagrant` as the password. Unforuntately, 
+The resolution is to choose `Use another account` and login with `.\vagrant` as the login and `vagrant` as the password. Unfortunately, 
 it appears that one must log in with these credentials in this manner each time you `vagrant rdp` (unless that issue says otherwise...). 
 
 `vagrant rdp -- /public` will also force mstsc into "public mode" which will clear the credentials dialogs each time. 
