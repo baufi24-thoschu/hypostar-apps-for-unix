@@ -1,7 +1,7 @@
 {
   "builders": [
     {
-      "vm_name": "windows10vm{{.Name}}",
+      "vm_name": "windows10vm",
       "communicator": "winrm",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
@@ -19,9 +19,10 @@
       "type": "hyperv-iso",
       "winrm_timeout": "6h",
       "winrm_username": "vagrant",
+      "winrm_password": "vagrant",
       "winrm_insecure": true
     }, {
-      "vm_name": "windows10vm{{.Name}}",
+      "vm_name": "windows10vm",
       "communicator": "winrm",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
@@ -88,9 +89,10 @@
       "type": "parallels-iso",
       "winrm_timeout": "6h",
       "winrm_username": "vagrant",
+      "winrm_password": "vagrant",
       "winrm_insecure": true
     }, {
-      "vm_name": "windows10vm{{.Name}}",
+      "vm_name": "windows10vm",
       "communicator": "winrm",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
@@ -115,9 +117,10 @@
       },
       "winrm_timeout": "6h",
       "winrm_username": "vagrant",
+      "winrm_password": "vagrant",
       "winrm_insecure": true
     }, {
-      "vm_name": "windows10vm{{.Name}}",
+      "vm_name": "windows10vm",
       "communicator": "winrm",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
@@ -125,7 +128,7 @@
         "update-windows.ps1",
         "configure-winrm.ps1"
       ],
-      "guest_additions_mode": "attach",
+      "guest_additions_mode": "upload",
       "guest_additions_path": "c:/Windows/Temp/windows.iso",
       "guest_os_type": "Windows10_64",
       "hard_drive_interface": "sata",
@@ -155,6 +158,7 @@
       ],
       "winrm_timeout": "6h",
       "winrm_username": "vagrant",
+      "winrm_password": "vagrant",
       "winrm_insecure": true
     }
   ],
@@ -188,11 +192,11 @@
     "iso_md5": "",
     "iso_path": "",
     "switch_name": "Default Switch",
-    "cpus": "8",
+    "cpus": "4",
     "iso_checksum": "56ab095075be28a90bc0b510835280975c6bb2ce",
     "iso_checksum_type": "sha1",
     "iso_url": "https://download.microsoft.com/download/C/3/9/C399EEA8-135D-4207-92C9-6AAB3259F6EF/10240.16384.150709-1700.TH1_CLIENTENTERPRISEEVAL_OEMRET_X64FRE_EN-US.ISO",
-    "memory_size": "8192",
+    "memory_size": "4096",
     "disk_size": "61440",
     "shutdown_command": "shutdown /s /t 5 /f /d p:4:1 /c \"Packer Shutdown\""
   }
